@@ -1,1 +1,1 @@
-return(fs.readfile('/tmp/gluon/survey.cache'))
+return(fs.readfile('/tmp/gluon/channel-survey.cache'))
