@@ -1,0 +1,8 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+
+boot() {
+	# populate channel-survey on boot
+	/usr/sbin/channel-survey > /tmp/gluon/channel-survey.cache
+}
