@@ -12,7 +12,7 @@ define Package/gluon-channel-survey
   SECTION:=gluon
   CATEGORY:=Gluon
   TITLE:=Channel usage survey module
-  DEPENDS:=+gluon-cron +luci-lib-json +alfred +iw
+  DEPENDS:=+gluon-cron +luci-lib-json +iw
 endef
 
 define Package/gluon-channel-survey/description
