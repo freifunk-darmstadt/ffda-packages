@@ -52,7 +52,7 @@ local function iwscan(dev, options)
     return stations
 end
 
-for _, dev in ipairs({"wlan0", "wlan1"}) do
+for _, dev in ipairs({"client0", "client1"}) do
     local scanresults = iwscan(dev)
     if scanresults and #scanresults > 0 then
         for _, station in ipairs(scanresults) do
