@@ -1,1 +1,9 @@
-return(fs.readfile('/tmp/gluon/channel-survey.cache'))
+local json = require 'luci.json'
+local ltn12 = require 'luci.ltn12'
+
+
+local decoder = json.Decoder()
+ltn12.pump.all(ltn12.source.file(io.open('/tmp/gluon/channel-survey.cache')), decoder:sink())
+
+return decoder:get()
+
