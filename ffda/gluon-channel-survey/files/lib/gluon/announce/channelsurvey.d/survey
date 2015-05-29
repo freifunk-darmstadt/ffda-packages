@@ -4,8 +4,7 @@ local ltn12 = require 'luci.ltn12'
 
 local decoder = json.Decoder()
 local handle = io.open('/tmp/gluon/channel-survey.cache')
-ltn12.pump.all(ltn12.source.file(handle, decoder:sink())
-handle.close()
+ltn12.pump.all(ltn12.source.file(handle), decoder:sink())
 
 return decoder:get()
 
