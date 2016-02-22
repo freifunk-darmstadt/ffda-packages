@@ -1,0 +1,10 @@
+#!/usr/bin/lua
+
+local uci = require 'luci.model.uci'
+local crs = uci.cursor()
+
+crs:delete('gluon-node-info', crs:get_first('gluon-node-info', 'owner'), 'contact')
+
+crs:save('gluon-node-info')
+crs:commit('gluon-node-info')
+
