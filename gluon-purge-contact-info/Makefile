@@ -5,6 +5,8 @@ PKG_VERSION:=1
 
 PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
 
+include $(GLUONDIR)/include/package.mk
+
 define Package/gluon-purge-contact-info
   SECTION:=gluon
   CATEGORY:=Gluon
