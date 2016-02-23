@@ -13,10 +13,6 @@ define Package/gluon-purge-contact-info
   TITLE:=Purge contact information from uci
 endef
 
-define Package/gluon-purge-contact-info/description
-	This packages purges contact information from uci.
-endef
-
 define Build/Prepare
 	mkdir -p $(PKG_BUILD_DIR)
 endef
