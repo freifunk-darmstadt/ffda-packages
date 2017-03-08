@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# this script switches the node's autoupdater branch setting to stable,
+#  if the currently installed image matches certain conditions.
+#
+
+if [ "$(uci get autoupdater.settings.branch)" != stable ]; then
+	UPDATE_BRANCH=false
+
+	# Router is located in Gernsheim (local distributor sets up experimental updates)
+	if pretty-hostname | egrep -q "^64579-"; then
+		UPDATE_BRANCH=true
+	fi
+
+	# Router model was introduced since the last major release
+	# so your only choice was flashing experimental
+	THIS_MODEL=$(lua -e 'print(require("platform_info").get_image_name())')
+	NEW_MODELS="tp-link-tl-wr1043n-nd-v4 \
+		    tp-link-tl-wr841n-nd-v11 \
+		    tp-link-tl-wr842n-nd-v3 \
+		    tp-link-tl-wa801n-nd-v3 \
+		    tp-link-tl-wa901n-nd-v4 \
+		    tp-link-tl-wa940n-v4 \
+		    tp-link-archer-c5-v1 \
+		    tp-link-archer-c7-v2"
+
+	if echo $NEW_MODELS | grep -q $THIS_MODEL; then
+		UPDATE_BRANCH=true
+	fi
+
+	# make changes if necessary
+	if $UPDATE_BRANCH; then
+		uci set autoupdater.settings.branch='stable'
+	fi
+fi
