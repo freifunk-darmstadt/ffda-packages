@@ -1,35 +1,52 @@
-#!/bin/sh
-#
-# this script switches the node's autoupdater branch setting to stable,
-#  if the currently installed image matches certain conditions.
-#
+#!/usr/bin/lua
 
-if [ "$(uci get autoupdater.settings.branch)" != stable ]; then
-	UPDATE_BRANCH=false
+local uci = require('simple-uci').cursor()
 
-	# Router is located in Gernsheim (local distributor sets up experimental updates)
-	if pretty-hostname | egrep -q "^64579-"; then
-		UPDATE_BRANCH=true
-	fi
+if uci:get_first('autoupdater', 'settings', 'branch') != 'experimental' then
+  return
+end
 
-	# Router model was introduced since the last major release
-	# so your only choice was flashing experimental
-	THIS_MODEL=$(lua -e 'print(require("platform_info").get_image_name())')
-	NEW_MODELS="tp-link-tl-wr1043n-nd-v4 \
-		    tp-link-tl-wr841n-nd-v11 \
-		    tp-link-tl-wr842n-nd-v3 \
-		    tp-link-tl-wa801n-nd-v3 \
-		    tp-link-tl-wa901n-nd-v4 \
-		    tp-link-tl-wa940n-v4 \
-		    tp-link-archer-c5-v1 \
-		    tp-link-archer-c7-v2"
+local platform_info = require('platform_info')
 
-	if echo $NEW_MODELS | grep -q $THIS_MODEL; then
-		UPDATE_BRANCH=true
-	fi
+function Set (list)
+  local set = {}
+  for _, l in ipairs(list) do set[l] = true end
+  return set
+end
 
-	# make changes if necessary
-	if $UPDATE_BRANCH; then
-		uci set autoupdater.settings.branch='stable'
-	fi
-fi
+local update_branch = false
+
+-- These routers were introduced since the last major
+-- release, so if you wanted to use them you had to
+-- use an experimental image.
+local new_models = Set {
+  'tp-link-tl-wr1043n-nd-v4',
+  'tp-link-tl-wr841n-nd-v11',
+  'tp-link-tl-wr842n-nd-v3',
+  'tp-link-tl-wa801n-nd-v3',
+  'tp-link-tl-wa901n-nd-v4',
+  'tp-link-tl-wa940n-v4',
+  'tp-link-archer-c5-v1',
+  'tp-link-archer-c7-v2' 
+}
+
+if new_models[platform_info.get_image_name()] then
+  update_branch = true  
+  print('[+] device was introduced after latest stable release')
+end
+
+
+-- Theres devices are located in Gernsheim (postal 64579),
+-- the local distributor sets them up for experimental updates :/
+if uci:get_first('system', 'system', 'hostname'):match('^64579-') then
+  update_branch = true
+  print('[+] system.system.hostname ~= \'^64579-\'')
+end
+
+
+if update_branch then
+  uci:set('autoupdater', 'settings', 'branch', 'stable')
+  uci:save('autoupdater')
+  print('[+] autoupdater branch set to stable')
+end
+
