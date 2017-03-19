@@ -2,7 +2,7 @@
 
 local uci = require('simple-uci').cursor()
 
-if uci:get_first('autoupdater', 'settings', 'branch') != 'experimental' then
+if uci:get('autoupdater', 'settings', 'branch') ~= 'experimental' then
   return
 end
 
