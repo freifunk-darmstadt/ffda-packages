@@ -1,0 +1,8 @@
+#!/bin/sh
+
+UPDATE_BRANCH=$(uci get autoupdater.settings.branch)
+
+if [ "$UPDATE_BRANCH" = "experimental" ]; then
+    uci set autoupdater.settings.branch='testing'
+fi
+
