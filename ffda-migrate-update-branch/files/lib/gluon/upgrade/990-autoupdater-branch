@@ -3,6 +3,10 @@
 UPDATE_BRANCH=$(uci get autoupdater.settings.branch)
 
 if [ "$UPDATE_BRANCH" = "experimental" ]; then
+    # migrate experimental nodes to testing
     uci set autoupdater.settings.branch='testing'
 fi
+
+# drop experimental branch info
+uci delete autoupdater.experimental
 
