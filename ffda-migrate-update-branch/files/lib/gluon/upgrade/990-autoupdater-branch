@@ -8,5 +8,5 @@ if [ "$UPDATE_BRANCH" = "experimental" ]; then
 fi
 
 # drop experimental branch info
-uci delete autoupdater.experimental
+uci -q delete autoupdater.experimental || true
 
