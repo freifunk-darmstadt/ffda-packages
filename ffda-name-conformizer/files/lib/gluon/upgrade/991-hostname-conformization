@@ -2,8 +2,8 @@
 
 HOSTNAME=$(pretty-hostname)
 
-if [ "$HOSTNAME" = "# 63322-ZA_Dr_Fritz_und_Schroeder" ]; then
+if [ "$HOSTNAME" = "WINTER-IS-HERE" ]; then
     uci delete system.@system[0].pretty_hostname
-    uci set system.@system[0].hostname='63322-ZA_Dr_Fritz_und_Schroeder'
+    uci set system.@system[0].hostname='64807-WINTER-IS-HERE'
 fi
 
