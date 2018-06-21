@@ -2,7 +2,7 @@
 
 local uci = require('simple-uci').cursor()
 
-if uci:get('autoupdater', 'settings', 'branch') ~= 'experimental' then
+if uci:get('autoupdater', 'settings', 'branch') ~= 'testing' then
   return
 end
 
@@ -20,27 +20,28 @@ local update_branch = false
 -- release, so if you wanted to use them you had to
 -- use an experimental image.
 local new_models = Set {
-  'tp-link-tl-wr1043n-nd-v4',
-  'tp-link-tl-wr841n-nd-v11',
-  'tp-link-tl-wr842n-nd-v3',
-  'tp-link-tl-wa801n-nd-v3',
-  'tp-link-tl-wa901n-nd-v4',
-  'tp-link-tl-wa940n-v4',
-  'tp-link-archer-c5-v1',
-  'tp-link-archer-c7-v2' 
+  'alfa-network-ap121f',
+  'avm-fritz-box-4020',
+  'openmesh-a60',
+  'tp-link-archer-c25-v1',
+  'tp-link-archer-c59-v1',
+  'ubiquiti-rocket-m',
+  'tp-link-tl-wa901n-nd-v5',
+  'raspberry-pi-3',
+  'gl-mt300a',
+  'gl-mt300n',
+  'gl-mt750',
+  'netgear-wndr3700v5',
+  'zbt-wg3526-16m',
+  'zbt-wg3526-32m',
+  'a5-v11',
+  'd-link-dir-615-h1',
+  'd-link-dir-615-d'
 }
 
 if new_models[platform_info.get_image_name()] then
   update_branch = true  
   print('[+] device was introduced after latest stable release')
-end
-
-
--- Theres devices are located in Gernsheim (postal 64579),
--- the local distributor sets them up for experimental updates :/
-if uci:get_first('system', 'system', 'hostname'):match('^64579-') then
-  update_branch = true
-  print('[+] system.system.hostname ~= \'^64579-\'')
 end
 
 
