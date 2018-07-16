@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ffda-update-stabilizer
 PKG_VERSION:=2018.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 include ../gluon.mk
 

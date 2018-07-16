@@ -20,23 +20,39 @@ local update_branch = false
 -- release, so if you wanted to use them you had to
 -- use an experimental image.
 local new_models = Set {
+  'a5-v11',
   'alfa-network-ap121f',
   'avm-fritz-box-4020',
-  'openmesh-a60',
-  'tp-link-archer-c25-v1',
-  'tp-link-archer-c59-v1',
-  'ubiquiti-rocket-m',
-  'tp-link-tl-wa901n-nd-v5',
-  'raspberry-pi-3',
+  'd-link-dir-615-d',
+  'd-link-dir-615-h1',
+  'd-link-dir-860l-b1',
   'gl-mt300a',
   'gl-mt300n',
   'gl-mt750',
+  'lamobo-r1',
+  'lemaker-banana-pro',
   'netgear-wndr3700v5',
+  'netgear-wndrmac',
+  'netgear-wnr2200',
+  'openmesh-a60',
+  'raspberry-pi-3',
+  'tp-link-archer-c25-v1',
+  'tp-link-archer-c58-v1',
+  'tp-link-archer-c59-v1',
+  'tp-link-archer-c60-v1',
+  'tp-link-archer-c7-v4',
+  'tp-link-cpe210-v2.0',
+  'tp-link-tl-wa901n-nd-v5',
+  'tp-link-tl-wr802n-v1',
+  'tp-link-tl-wr810n-v1',
+  'tp-link-tl-wr1043n-v5',
+  'ubnt-erx',
+  'ubnt-erx-sfp',
+  'ubiquiti-rocket-m',
+  'ubiquiti-unifi-ac-mesh',
   'zbt-wg3526-16m',
   'zbt-wg3526-32m',
-  'a5-v11',
-  'd-link-dir-615-h1',
-  'd-link-dir-615-d'
+  'zyxel-nbg6716'
 }
 
 if new_models[platform_info.get_image_name()] then
