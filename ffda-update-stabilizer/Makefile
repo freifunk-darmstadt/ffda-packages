@@ -4,7 +4,8 @@ PKG_NAME:=ffda-update-stabilizer
 PKG_VERSION:=2018.1
 PKG_RELEASE:=2
 
-include ../gluon.mk
+include $(TOPDIR)/../package/gluon.mk
+
 
 define Package/ffda-update-stabilizer
   TITLE:=Migrate devices that were added since the last major release to the stable branch.
@@ -18,4 +19,4 @@ define Package/ffda-update-stabilizer/description
 	for a certain list of devices.
 endef
 
-$(eval $(call BuildPackage,ffda-update-stabilizer))
+$(eval $(call BuildPackageGluon,ffda-update-stabilizer))
