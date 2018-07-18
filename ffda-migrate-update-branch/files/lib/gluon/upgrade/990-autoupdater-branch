@@ -2,11 +2,12 @@
 
 UPDATE_BRANCH=$(uci get autoupdater.settings.branch)
 
-if [ "$UPDATE_BRANCH" = "experimental" ]; then
-    # migrate experimental nodes to testing
+if [ "$UPDATE_BRANCH" = "experimental" ] || [ "$UPDATE_BRANCH" = "multidomain" ]; then
+    # migrate nodes on outdated update branches to testing
     uci set autoupdater.settings.branch='testing'
 fi
 
-# drop experimental branch info
+# drop outdated update branches
 uci -q delete autoupdater.experimental || true
+uci -q delete autoupdater.multidomain || true
 
