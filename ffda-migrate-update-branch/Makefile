@@ -8,7 +8,7 @@ include $(TOPDIR)/../package/gluon.mk
 
 
 define Package/ffda-migrate-update-branch
-  TITLE:=Migrate autoupdater branches asnd settings
+  TITLE:=Migrate autoupdater branches and settings
   DEPENDS:=+gluon-core
 endef
 
