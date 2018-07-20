@@ -25,7 +25,6 @@ local new_models = Set {
   'avm-fritz-box-4020',
   'd-link-dir-615-d',
   'd-link-dir-615-h1',
-  'd-link-dir-860l-b1',
   'gl-mt300a',
   'gl-mt300n',
   'gl-mt750',
