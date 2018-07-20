@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ffda-migrate-update-branch
 PKG_VERSION:=v2018.1
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 include $(TOPDIR)/../package/gluon.mk
 
