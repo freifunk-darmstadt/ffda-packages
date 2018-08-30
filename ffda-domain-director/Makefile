@@ -13,7 +13,7 @@ define Package/ffda-domain-director
   SECTION:=gluon
   CATEGORY:=Gluon
   TITLE:=Direct nodes into their corresponding mesh-domain
-  DEPENDS:=+gluon-core
+  DEPENDS:=+gluon-core +libiwinfo +luaposix
 endef
 
 define Package/ffda-domain-director/description
