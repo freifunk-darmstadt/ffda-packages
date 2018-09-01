@@ -52,7 +52,7 @@ end
 
 -- Returns true if node was offline long enough to perform domain switch
 function is_offline_treshold_reached()
-  if not path_exists("/tmp/ffda_gw_unreach") then
+  if not path_exists("/tmp/ffda_director_gw_unreach") then
     return false
   end
 
@@ -62,7 +62,7 @@ function is_offline_treshold_reached()
     return false
   end
 
-  local f = io.open("/tmp/ffda_gw_unreach")
+  local f = io.open("/tmp/ffda_director_gw_unreach")
   if not f then
     return false
   end
