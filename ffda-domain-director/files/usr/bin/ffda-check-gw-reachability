@@ -1,6 +1,6 @@
 #! /bin/sh
 
-GW_COUNT=$(batctl gwl -H | wc-l)
+GW_COUNT=$(batctl gwl -H | wc -l)
 
 if [ $GW_COUNT -gt 0 ]
 then
