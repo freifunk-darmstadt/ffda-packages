@@ -9,9 +9,6 @@ local touch_handle = io.popen("touch /etc/config/ffda")
 touch_handle:read('*all')
 touch_handle:close()
 
--- Delete existing section
-uci:delete('ffda', 'director')
-
 -- Create UCI section
 uci:section('ffda', 'director', 'director', {
 		enabled = site.domain_director.enabled,
