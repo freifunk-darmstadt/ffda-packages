@@ -1,6 +1,6 @@
 /*
-	Copyright (c) 2016, Matthias Schiffer <mschiffer@universe-factory.net>
-	Copyright (c) 2018, David Bauer <david@darmstadt.freifunk.net>
+  Copyright (c) 2016, Matthias Schiffer <mschiffer@universe-factory.net>
+  Copyright (c) 2018, David Bauer <david@darmstadt.freifunk.net>
   All rights reserved.
 
   Redistribution and use in source and binary forms, with or without
@@ -50,11 +50,10 @@ static struct json_object * get_domain_director(void) {
 		goto error;
 
 	struct json_object *ret = json_object_new_object();
-
+	json_object_object_add(ret, "enabled", gluonutil_wrap_string(uci_lookup_option_string(ctx, s, "enabled")));
+	json_object_object_add(ret, "switch_enabled", gluonutil_wrap_string(uci_lookup_option_string(ctx, s, "switch_enabled")));
 	json_object_object_add(ret, "switch_after", gluonutil_wrap_string(uci_lookup_option_string(ctx, s, "switch_after")));
-
-	const char *enabled = uci_lookup_option_string(ctx, s, "enabled");
-	json_object_object_add(ret, "target_domain", gluonutil_wrap_string(uci_lookup_option_string(ctx, s, "target")));
+	json_object_object_add(ret, "target", gluonutil_wrap_string(uci_lookup_option_string(ctx, s, "target")));
 
 	uci_free_context(ctx);
 
