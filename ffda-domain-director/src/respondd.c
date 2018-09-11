@@ -56,12 +56,6 @@ static struct json_object *respondd_provider_domain_director(void) {
 		json_object_object_add(ret, "enabled", json_object_new_boolean(enabled));
 	}
 
-	c = uci_lookup_option_string(ctx, s, "switch_enabled");
-	if (c) {
-		bool switch_enabled = !strcmp(c, "1") ? true : false;
-		json_object_object_add(ret, "switch_enabled", json_object_new_boolean(switch_enabled));
-	}
-
 	c = uci_lookup_option_string(ctx, s, "switch_after");
 	if (c) {
 		json_object_object_add(ret, "switch_after", gluonutil_wrap_string(c));

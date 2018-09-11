@@ -13,7 +13,6 @@ touch_handle:close()
 uci:section('ffda', 'director', 'director', {
 		enabled = site.domain_director.enabled,
 		url = site.domain_director.url,
-		switch_enabled = site.domain_director.switch_enabled,
 		switch_after_offline = site.domain_director.switch_after_offline,
 })
 

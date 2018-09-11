@@ -55,9 +55,4 @@ if not ddutil.is_enabled() then
   return
 end
 
-if not uci:get_bool("ffda", "director", "switch_enabled") then
-  print("Domain switching is disabled.")
-	return
-end
-
 switch_domain()
