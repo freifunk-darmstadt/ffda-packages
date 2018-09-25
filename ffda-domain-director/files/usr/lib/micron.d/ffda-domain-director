@@ -1,3 +1,0 @@
-*/1 * * * *  /usr/bin/ffda-check-gw-reachability
-*/5 * * * *  /usr/bin/ffda-switch-domain
-0 */3 * * *  /usr/bin/ffda-get-domain

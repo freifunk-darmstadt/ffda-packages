@@ -16,4 +16,18 @@ uci:section('ffda', 'director', 'director', {
 		switch_after_offline = site.domain_director.switch_after_offline,
 })
 
+local urandom = io.open('/dev/urandom', 'r')
+local seed1, seed2 = urandom:read(2):byte(1, 2)
+math.randomseed(seed1*0x100 + seed2)
+urandom:close()
+
+-- Perform domain acquisition at random minute every 3 hours
+local minute = math.random(0, 59)
+
+local f = io.open('/usr/lib/micron.d/ffda-domain-director', 'w')
+f:write("*/1 * * * *  /usr/bin/ffda-check-gw-reachability\n")
+f:write("*/5 * * * *  /usr/bin/ffda-switch-domain\n")
+f:write(string.format('%i */3 * * *  /usr/bin/ffda-get-domain\n', minute))
+f:close()
+
 uci:commit("ffda")
