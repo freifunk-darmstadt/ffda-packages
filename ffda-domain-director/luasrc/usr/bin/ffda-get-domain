@@ -9,10 +9,25 @@ local ddutil = require 'ffda-domain-director.util'
 -- https://github.com/FreifunkHochstift/ffho-packages/blob/master/ffho/ffho-autoupdater-wifi-fallback/luasrc/usr/lib/lua/autoupdater-wifi-fallback/util.lua#L5
 function get_available_wifi_networks()
   local radios = {}
-
   uci:foreach('wireless', 'wifi-device',
     function(s)
-      radios[s['.name']] = {}
+      local use_device = true
+      uci:foreach('wireless', 'wifi-iface',
+        function (t)
+          if (t['device'] == s['.name']) then
+            local handle = io.popen("iw dev " ..t['ifname'].." scan > /dev/null 2>&1; echo $?")
+            local out_string = handle:read("*a")
+            handle:close()
+            if tonumber(out_string) ~= 0 then
+              print("Not using "..s['.name'])
+              use_device = false
+            end
+          end
+        end
+      )
+      if use_device then
+        radios[s['.name']] = {}
+      end
     end
   )
 
@@ -21,7 +36,7 @@ function get_available_wifi_networks()
     local iw = iwinfo[wifitype]
     if not iw then
       return null
-	end
+    end
     local tmplist = iw.scanlist(radio)
     for _, net in ipairs(tmplist) do
       if net.ssid and net.bssid then
@@ -29,7 +44,6 @@ function get_available_wifi_networks()
       end
     end
   end
-
   return radios
 end
 
