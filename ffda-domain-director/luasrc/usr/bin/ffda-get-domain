@@ -15,6 +15,11 @@ function get_available_wifi_networks()
       uci:foreach('wireless', 'wifi-iface',
         function (t)
           if (t['device'] == s['.name']) then
+            if (t['ifname'] == nil) then
+              print("Not using "..s['.name'])
+              use_device = false
+              return
+            end
             local handle = io.popen("iw dev " ..t['ifname'].." scan > /dev/null 2>&1; echo $?")
             local out_string = handle:read("*a")
             handle:close()
