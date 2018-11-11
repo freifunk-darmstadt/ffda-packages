@@ -1,7 +1,7 @@
 #!/usr/bin/lua
 
 local json = require 'jsonc'
-local site = assert(json.load('/lib/gluon/site.json'))
+local site = require 'gluon.site'
 local uci = require('simple-uci').cursor()
 
 -- Create UCI configuration file if not present
@@ -10,11 +10,21 @@ touch_handle:read('*all')
 touch_handle:close()
 
 -- Create UCI section
+local director_enabled = true
+if uci:get("ffda", "director", "enabled") ~= nil then
+	director_enabled = uci:get("ffda", "director", "enabled")
+end
 uci:section('ffda', 'director', 'director', {
-		enabled = site.domain_director.enabled,
-		url = site.domain_director.url,
-		switch_after_offline = site.domain_director.switch_after_offline,
+	enabled = director_enabled,
 })
+
+if site.domain_director.url(nil) ~= nil then
+	uci:set("ffda", "director", "url", site.domain_director.url())
+end
+
+if site.domain_director.switch_after_offline(nil) ~= nil then
+	uci:set("ffda", "director", "switch_after_offline", site.domain_director.switch_after_offline())
+end
 
 local urandom = io.open('/dev/urandom', 'r')
 local seed1, seed2 = urandom:read(2):byte(1, 2)

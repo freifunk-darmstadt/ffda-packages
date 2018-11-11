@@ -99,6 +99,11 @@ end
 
 -- Returns if the domain director is enabled in UCI
 function is_enabled()
+  local site = require 'gluon.site'
   local uci = require('simple-uci').cursor()
-  return uci:get_bool("ffda", "director", "enabled", false)
+
+  if not site.domain_director.enabled(false) then
+    return false
+  end
+  return uci:get_bool("ffda", "director", "enabled", true)
 end
