@@ -8,7 +8,7 @@ include $(TOPDIR)/../package/gluon.mk
 
 define Package/gluon-web-ffda-domain-director
   TITLE:=gluon-web module to enable and disable ffda-domain-director
-  DEPENDS:=+ffda-domain-director
+  DEPENDS:=+gluon-web-admin +ffda-domain-director
 endef
 
 $(eval $(call BuildPackageGluon,gluon-web-ffda-domain-director))
