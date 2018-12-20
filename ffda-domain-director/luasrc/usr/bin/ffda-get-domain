@@ -11,21 +11,23 @@ function get_available_wifi_networks()
   local radios = {}
   uci:foreach('wireless', 'wifi-device',
     function(s)
-      local use_device = true
+      -- Start with the assumption we won't use the device
+      local use_device = false
       uci:foreach('wireless', 'wifi-iface',
         function (t)
           if (t['device'] == s['.name']) then
             if (t['ifname'] == nil) then
-              print("Not using "..s['.name'])
-              use_device = false
+              -- Don't use private WiFi for test scan
               return
             end
+            -- Perform test scan to detect possible WiFi hang, which would stall libiwinfo scan forever
+            -- Probably needs an upstream fix, but this is pending
             local handle = io.popen("iw dev " ..t['ifname'].." scan > /dev/null 2>&1; echo $?")
             local out_string = handle:read("*a")
             handle:close()
-            if tonumber(out_string) ~= 0 then
-              print("Not using "..s['.name'])
-              use_device = false
+            if tonumber(out_string) == 0 then
+              -- Scan successful, use this device for libiwinfo scan
+              use_device = true
             end
           end
         end
