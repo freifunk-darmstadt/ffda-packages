@@ -3,6 +3,9 @@
 local json = require 'jsonc'
 local site = require 'gluon.site'
 local uci = require('simple-uci').cursor()
+local unistd = require 'posix.unistd'
+
+local ddutil = require 'ffda-domain-director.util'
 
 -- Create UCI configuration file if not present
 local touch_handle = io.popen("touch /etc/config/ffda")
@@ -26,6 +29,18 @@ if site.domain_director.switch_after_offline(nil) ~= nil then
 	uci:set("ffda", "director", "switch_after_offline", site.domain_director.switch_after_offline())
 end
 
+local cronfile = "/usr/lib/micron.d/ffda-domain-director"
+
+-- Check if director is enabled for the current domain
+if not ddutil.is_enabled_site() then
+  -- In case it is disabled, check for cronfile and delete if it exists
+  if unistd.access(cronfile) then
+    os.remove(cronfile)
+  end
+  -- Terminate here
+  return
+end
+
 local urandom = io.open('/dev/urandom', 'r')
 local seed1, seed2 = urandom:read(2):byte(1, 2)
 math.randomseed(seed1*0x100 + seed2)
@@ -34,7 +49,7 @@ urandom:close()
 -- Perform domain acquisition at random minute every 3 hours
 local minute = math.random(0, 59)
 
-local f = io.open('/usr/lib/micron.d/ffda-domain-director', 'w')
+local f = io.open(cronfile, 'w')
 f:write("*/1 * * * *  /usr/bin/ffda-check-gw-reachability\n")
 f:write("*/5 * * * *  /usr/bin/ffda-switch-domain\n")
 f:write(string.format('%i */3 * * *  /usr/bin/ffda-get-domain\n', minute))

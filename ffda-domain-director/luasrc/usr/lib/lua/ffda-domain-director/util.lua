@@ -97,13 +97,29 @@ function has_switch_time_passed()
   return false
 end
 
--- Returns if the domain director is enabled in UCI
-function is_enabled()
-  local site = require 'gluon.site'
+-- Returns true if the domain director is enabled in UCI
+-- Returns true also in case UCI key is not present
+function is_enabled_uci()
   local uci = require('simple-uci').cursor()
+
+  return uci:get_bool("ffda", "director", "enabled", true)
+end
+
+-- Returns true if the domain director is enabled in-site for the current domain
+function is_enabled_site()
+  local site = require 'gluon.site'
 
   if not site.domain_director.enabled(false) then
     return false
   end
-  return uci:get_bool("ffda", "director", "enabled", true)
+  return true
+end
+
+-- Returns if true the domain director is enabled in-site for the current domain
+-- and by the user (Active by default)
+function is_enabled()
+  if is_enabled_site() and is_enabled_uci() then
+    return true
+  end
+  return false
 end
