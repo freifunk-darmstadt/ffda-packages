@@ -89,10 +89,6 @@ function has_switch_time_passed()
     return false
   end
 
-  if type(switch_time)=="string" then
-    switch_time = tonumber(switch_time)
-  end
-
   if switch_time < current_epoch then
     return true
   end
