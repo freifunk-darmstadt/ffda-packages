@@ -29,9 +29,6 @@ function switch_domain()
 
   if not ddutil.is_offline_treshold_reached() then
     if not ddutil.has_switch_time_passed() then
-      local switch_time = ddutil.get_switch_time()
-      local time_left = switch_time - os.time()
-      print("Switch time has not passed, "..time_left.." seconds left")
       return
     end
   else
