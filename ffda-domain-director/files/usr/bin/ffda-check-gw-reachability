@@ -1,6 +1,7 @@
 #! /bin/sh
 
 GW_COUNT=$(batctl gwl -H | wc -l)
+CURRENT_UPTIME=$(cat /proc/uptime | cut -d "." -f1)
 
 if [ $GW_COUNT -gt 0 ]
 then
@@ -17,6 +18,6 @@ else
         echo "Gateway unreachable notice already present"
     else
         echo "Placing gateway unreachable notice"
-        date +'%s' > /tmp/ffda_director_gw_unreach
+        echo "$CURRENT_UPTIME" > /tmp/ffda_director_gw_unreach
     fi
 fi

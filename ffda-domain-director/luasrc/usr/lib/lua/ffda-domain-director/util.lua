@@ -56,7 +56,6 @@ function is_offline_treshold_reached()
     return false
   end
 
-  local current_epoch = os.time()
   local offline_treshold = get_offline_treshold() * 60
   if offline_treshold < 0 then
     return false
@@ -69,7 +68,11 @@ function is_offline_treshold_reached()
   local offline_since = f:read('*a')
   f:close()
 
-  local offline_duration = current_epoch - offline_since
+  local current_uptime_handle = io.popen('cat /proc/uptime | cut -d "." -f1')
+  local current_uptime = tonumber(current_uptime_handle:read('*all'))
+  current_uptime_handle:close()
+
+  local offline_duration = current_uptime - offline_since
 
   if offline_duration > offline_treshold then
     return true
