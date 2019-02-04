@@ -1,8 +1,0 @@
-#!/bin/sh /etc/rc.common
-
-START=99
-
-boot() {
-	# populate channel-survey on boot, give radio some time to get ready...
-	(sleep 30; /usr/sbin/channel-survey > /tmp/gluon/channel-survey.cache) &
-}
