@@ -7,11 +7,6 @@ local unistd = require 'posix.unistd'
 
 local ddutil = require 'ffda-domain-director.util'
 
--- Create UCI configuration file if not present
-local touch_handle = io.popen("touch /etc/config/ffda")
-touch_handle:read('*all')
-touch_handle:close()
-
 -- Create UCI section
 local director_enabled = true
 if uci:get("ffda", "director", "enabled") ~= nil then

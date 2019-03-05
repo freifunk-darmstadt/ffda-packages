@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ffda-domain-director
 PKG_VERSION:=2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 include $(TOPDIR)/../package/gluon.mk
 

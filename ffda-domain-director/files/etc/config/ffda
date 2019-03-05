@@ -1,0 +1,2 @@
+config director 'director'
+	option enabled '1'
