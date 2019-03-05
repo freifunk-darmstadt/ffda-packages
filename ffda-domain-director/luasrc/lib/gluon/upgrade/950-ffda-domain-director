@@ -29,6 +29,8 @@ if site.domain_director.switch_after_offline(nil) ~= nil then
 	uci:set("ffda", "director", "switch_after_offline", site.domain_director.switch_after_offline())
 end
 
+uci:commit("ffda")
+
 local cronfile = "/usr/lib/micron.d/ffda-domain-director"
 
 -- Check if director is enabled for the current domain
@@ -54,5 +56,3 @@ f:write("*/1 * * * *  /usr/bin/ffda-check-gw-reachability\n")
 f:write("*/5 * * * *  /usr/bin/ffda-switch-domain\n")
 f:write(string.format('%i */3 * * *  /usr/bin/ffda-get-domain\n', minute))
 f:close()
-
-uci:commit("ffda")
