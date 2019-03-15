@@ -80,6 +80,11 @@ function is_offline_treshold_reached()
   return false
 end
 
+-- Returns whether or not a switch time has been set. Returns false on -1.
+function has_switch_time()
+  return get_switch_time() ~= -1
+end
+
 -- Returns whether or not switch time has passed. Returns false on -1.
 function switch_time_passed()
   local current_epoch = os.time()

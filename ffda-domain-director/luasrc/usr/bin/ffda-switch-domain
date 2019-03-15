@@ -27,6 +27,10 @@ function switch_domain()
     return
   end
 
+  if not ddutil.has_switch_time() then
+    return
+  end
+
   if not ddutil.is_offline_treshold_reached() then
     if not ddutil.switch_time_passed() then
       return
