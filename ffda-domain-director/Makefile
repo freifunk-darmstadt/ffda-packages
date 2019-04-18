@@ -1,14 +1,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ffda-domain-director
-PKG_VERSION:=2
+PKG_VERSION:=3
 PKG_RELEASE:=1
 
 include $(TOPDIR)/../package/gluon.mk
 
 define Package/ffda-domain-director
   TITLE:=FFDA Domain-Director
-  DEPENDS:=+gluon-core +libiwinfo +luaposix
+  DEPENDS:=+gluon-core +luaposix +ffda-location
 endef
 
 define Package/ffda-domain-director/description
