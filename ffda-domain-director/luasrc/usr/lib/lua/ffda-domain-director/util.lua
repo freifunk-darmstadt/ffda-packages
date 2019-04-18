@@ -100,11 +100,7 @@ function switch_time_passed()
     return false
   end
 
-  if switch_time < current_epoch then
-    return true
-  end
-
-  return false
+  return switch_time < current_epoch
 end
 
 -- Returns true if the domain director is enabled in UCI
@@ -118,17 +114,11 @@ end
 function is_enabled_site()
   local site = require 'gluon.site'
 
-  if not site.domain_director.enabled(false) then
-    return false
-  end
-  return true
+  return site.domain_director.enabled(false)
 end
 
 -- Returns if true the domain director is enabled in-site for the current domain
 -- and by the user (Active by default)
 function is_enabled()
-  if is_enabled_site() and is_enabled_uci() then
-    return true
-  end
-  return false
+  return is_enabled_site() and is_enabled_uci()
 end
