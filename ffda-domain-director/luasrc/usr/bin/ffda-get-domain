@@ -2,7 +2,7 @@
 
 local json = require 'jsonc'
 local uci = require('simple-uci').cursor()
-local ddutil = require 'ffda-domain-director.util'
+local ddutil = require 'ffda-domain-director'
 local location = require 'ffda-location'
 
 

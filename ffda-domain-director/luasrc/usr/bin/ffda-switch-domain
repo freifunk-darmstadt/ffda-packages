@@ -1,7 +1,7 @@
 #!/usr/bin/lua
 
 local uci = require('simple-uci').cursor()
-local ddutil = require 'ffda-domain-director.util'
+local ddutil = require 'ffda-domain-director'
 
 -- Executes domain switch
 function switch_domain()

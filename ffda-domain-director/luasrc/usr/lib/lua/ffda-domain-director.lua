@@ -4,7 +4,7 @@ local require = require
 local tonumber = tonumber
 local type = type
 
-module 'ffda-domain-director.util'
+module 'ffda-domain-director'
 
 -- Returns true if provided path exists
 function path_exists(path)
