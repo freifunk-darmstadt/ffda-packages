@@ -89,3 +89,13 @@ function urlencode(str)
 	end
 	return str
 end
+
+-- Scans WiFi environment and queries remote.
+-- Returns response as string.
+function query_remote(remote)
+	local wifi_json = generate_wifi_json(get_available_wifi_networks())
+	local handle = io.popen("wget -T 30 -qO -  --post-data=wifis=" ..urlencode(wifi_json) .. " "..remote)
+	local return_str =  handle:read("*a")
+	handle:close()
+	return return_str
+end
