@@ -58,6 +58,8 @@ end
 
 -- Returns true if node was offline long enough to perform domain switch
 function is_offline_treshold_reached()
+  local util = require 'gluon.util'
+
   if not path_exists("/tmp/ffda_director_gw_unreach") then
     return false
   end
@@ -74,16 +76,9 @@ function is_offline_treshold_reached()
   local offline_since = f:read('*a')
   f:close()
 
-  local current_uptime_handle = io.popen('cat /proc/uptime | cut -d "." -f1')
-  local current_uptime = tonumber(current_uptime_handle:read('*all'))
-  current_uptime_handle:close()
+  local offline_duration = util.get_uptime() - offline_since
 
-  local offline_duration = current_uptime - offline_since
-
-  if offline_duration > offline_treshold then
-    return true
-  end
-  return false
+  return offline_duration > offline_treshold
 end
 
 -- Returns whether or not a switch time has been set. Returns false on -1.
