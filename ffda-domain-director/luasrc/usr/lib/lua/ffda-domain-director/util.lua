@@ -33,7 +33,10 @@ end
 -- Returns switch-after time from UCI as UNIX epoch
 function get_switch_time()
   local uci = require('simple-uci').cursor()
-  local switch_time = uci:get('ffda', 'director', 'switch_after', -1)
+  local switch_time = uci:get('ffda', 'director', 'switch_after')
+  if switch_time == nil then
+    switch_time = -1
+  end
   if type(switch_time)=="string" then
     switch_time = tonumber(switch_time)
   end
@@ -43,7 +46,10 @@ end
 -- Returns treshold for node-offline domain switching in minutes from UCI in minutes
 function get_offline_treshold()
   local uci = require('simple-uci').cursor()
-  local offline_treshold = uci:get('ffda', 'director', 'switch_after_offline', 120)
+  local offline_treshold = uci:get('ffda', 'director', 'switch_after_offline')
+  if offline_treshold == nil then
+    offline_treshold = 120
+  end
   if type(offline_treshold)=="string" then
     offline_treshold = tonumber(offline_treshold)
   end
@@ -102,11 +108,10 @@ function switch_time_passed()
 end
 
 -- Returns true if the domain director is enabled in UCI
--- Returns true also in case UCI key is not present
 function is_enabled_uci()
   local uci = require('simple-uci').cursor()
 
-  return uci:get_bool("ffda", "director", "enabled", true)
+  return uci:get_bool("ffda", "director", "enabled")
 end
 
 -- Returns true if the domain director is enabled in-site for the current domain
