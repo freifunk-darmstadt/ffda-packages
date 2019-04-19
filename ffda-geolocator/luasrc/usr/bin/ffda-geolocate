@@ -1,0 +1,40 @@
+#!/usr/bin/lua
+
+local json = require 'jsonc'
+local liblocation = require 'ffda-location'
+
+function arg_present(argument)
+	for _, v in ipairs(arg) do
+		if v == argument then
+			return true
+		end
+	end
+	return false
+end
+
+function set_location(lat, lon)
+	local uci = require('simple-uci').cursor()
+	local location = uci:get_first("gluon-node-info", "location")
+	uci:set("gluon-node-info", location, "latitude", lat)
+	uci:set("gluon-node-info", location, "longitude", lon)
+	uci:commit("gluon-node-info")
+end
+
+
+local response_str = liblocation.query_remote("http://[2001:67c:2ed8:100e:4d07:d6ad:3119:fd15]:28530/get_location")
+local loc = json.parse(response_str)
+if loc == nil then
+	print("Received invalid response. Exiting.")
+	return
+end
+
+print("Position: " .. loc.location.lat .. ", " .. loc.location.lon)
+print("Accuracy: " .. loc.location.accuracy)
+print("---")
+print("https://www.openstreetmap.org/?mlat=" .. loc.location.lat .. "&mlon=" .. loc.location.lon .. "#map=18/" .. loc.location.lat .. "/" .. loc.location.lon)
+print("https://www.google.com/maps/search/?api=1&query=" .. loc.location.lat .. "," .. loc.location.lon)
+
+if arg_present("--set-location") then
+	set_location(loc.location.lat, loc.location.lon)
+	print("Location saved.")
+end
