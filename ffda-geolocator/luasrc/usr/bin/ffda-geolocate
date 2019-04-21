@@ -20,6 +20,34 @@ function set_location(lat, lon)
 	uci:commit("gluon-node-info")
 end
 
+function haversine(lat1, lon1, lat2, lon2)
+	-- convert decimal degrees to radians
+	local lat1 = math.rad(lat1)
+	local lon1 = math.rad(lon1)
+	local lat2 = math.rad(lat2)
+	local lon2 = math.rad(lon2)
+
+	-- haversine formula
+	local dlon = lon2 - lon1
+	local dlat = lat2 - lat1
+	local a = math.pow(math.sin(dlat / 2), 2) + math.cos(lat1) * math.cos(lat2) * math.pow(math.sin(dlon / 2), 2)
+	local c = 2 * math.asin(math.sqrt(a))
+	-- radius of earth in kilometers is 6371
+	local km = 6371 * c
+	local m = km * 1000
+	return m
+end
+
+function distance_from_current(lat, lon)
+	local uci = require('simple-uci').cursor()
+	local location = uci:get_first("gluon-node-info", "location")
+	local clat = uci:get("gluon-node-info", location, "latitude")
+	local clon = uci:get("gluon-node-info", location, "longitude")
+	if clat == nil or clon == nil then
+		return nil
+	end
+	return haversine(lat, lon, clat, clon)
+end
 
 local response_str = liblocation.query_remote("http://[2001:67c:2ed8:100e:4d07:d6ad:3119:fd15]:28530/get_location")
 local loc = json.parse(response_str)
@@ -35,6 +63,14 @@ print("https://www.openstreetmap.org/?mlat=" .. loc.location.lat .. "&mlon=" .. 
 print("https://www.google.com/maps/search/?api=1&query=" .. loc.location.lat .. "," .. loc.location.lon)
 
 if arg_present("--set-location") then
+	print("---")
+	local distance = distance_from_current(loc.location.lat, loc.location.lon)
+
+	if distance == nil or distance < loc.location.accuracy then
+		print("Current position is within the accuracy of the determined.")
+		return
+	end
+
 	set_location(loc.location.lat, loc.location.lon)
 	print("Location saved.")
 end
