@@ -3,13 +3,17 @@
 local json = require 'jsonc'
 local liblocation = require 'ffda-location'
 
-function arg_present(argument)
+function get_arg(argument)
+	local val = false
 	for _, v in ipairs(arg) do
+		if val then
+			return v
+		end
 		if v == argument then
-			return true
+			val = true
 		end
 	end
-	return false
+	return val
 end
 
 function set_location(lat, lon)
@@ -62,8 +66,13 @@ print("---")
 print("https://www.openstreetmap.org/?mlat=" .. loc.location.lat .. "&mlon=" .. loc.location.lon .. "#map=18/" .. loc.location.lat .. "/" .. loc.location.lon)
 print("https://www.google.com/maps/search/?api=1&query=" .. loc.location.lat .. "," .. loc.location.lon)
 
-if arg_present("--set-location") then
+if get_arg("--set-location") then
 	print("---")
+	local minimum_accuracy = get_arg("--min-accuracy")
+	if minimum_accuracy and minimum_accuracy < loc.location.accuracy then
+		print("Determined location is not accurate enough.")
+		return
+	end
 	local distance = distance_from_current(loc.location.lat, loc.location.lon)
 
 	if distance == nil or distance < loc.location.accuracy then
