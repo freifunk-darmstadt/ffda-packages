@@ -2,6 +2,9 @@
 
 local json = require 'jsonc'
 local liblocation = require 'ffda-location'
+local unistd = require 'posix.unistd'
+local site = require 'gluon.site'
+local uci = require('simple-uci').cursor()
 
 function get_arg(argument)
 	local val = false
@@ -53,7 +56,20 @@ function distance_from_current(lat, lon)
 	return haversine(lat, lon, clat, clon)
 end
 
-local response_str = liblocation.query_remote("http://[2001:67c:2ed8:100e:4d07:d6ad:3119:fd15]:28530/get_location")
+function get_locator_url()
+	return "http://" .. site.geolocator.url() .. "/get_location"
+end
+
+if get_arg("--cron") then
+	if not uci:get_bool("ffda", "locator", "enabled") then
+		return
+	end
+	if unistd.access("/tmp/ffda_location_set") then
+		return
+	end
+end
+
+local response_str = liblocation.query_remote(get_locator_url())
 local loc = json.parse(response_str)
 if loc == nil then
 	print("Received invalid response. Exiting.")
@@ -66,20 +82,27 @@ print("---")
 print("https://www.openstreetmap.org/?mlat=" .. loc.location.lat .. "&mlon=" .. loc.location.lon .. "#map=18/" .. loc.location.lat .. "/" .. loc.location.lon)
 print("https://www.google.com/maps/search/?api=1&query=" .. loc.location.lat .. "," .. loc.location.lon)
 
+local minimum_accuracy = nil
+
 if get_arg("--set-location") then
-	print("---")
-	local minimum_accuracy = get_arg("--min-accuracy")
-	if minimum_accuracy and minimum_accuracy < loc.location.accuracy then
-		print("Determined location is not accurate enough.")
-		return
-	end
-	local distance = distance_from_current(loc.location.lat, loc.location.lon)
-
-	if distance == nil or distance < loc.location.accuracy then
-		print("Current position is within the accuracy of the determined.")
-		return
-	end
-
-	set_location(loc.location.lat, loc.location.lon)
-	print("Location saved.")
+	minimum_accuracy = get_arg("--min-accuracy")
+elseif get_arg("--cron") then
+	minimum_accuracy = uci:get("ffda", "locator", "minimum_accuracy")
+	os.execute("touch /tmp/ffda_location_set")
+else
+	return
 end
+
+if minimum_accuracy and minimum_accuracy < loc.location.accuracy then
+	print("Determined location is not accurate enough.")
+	return
+end
+local distance = distance_from_current(loc.location.lat, loc.location.lon)
+
+if distance == nil or distance < loc.location.accuracy then
+	print("Current position is within the accuracy of the determined.")
+	return
+end
+
+set_location(loc.location.lat, loc.location.lon)
+print("Location saved.")
