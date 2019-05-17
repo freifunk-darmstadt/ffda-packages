@@ -57,7 +57,7 @@ function distance_from_current(lat, lon)
 end
 
 function get_locator_url()
-	return "http://" .. site.geolocator.url() .. "/get_location"
+	return site.geolocator.url()
 end
 
 if get_arg("--cron") then
