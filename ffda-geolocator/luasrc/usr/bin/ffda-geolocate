@@ -99,7 +99,7 @@ if minimum_accuracy and minimum_accuracy < loc.location.accuracy then
 end
 local distance = distance_from_current(loc.location.lat, loc.location.lon)
 
-if distance == nil or distance < loc.location.accuracy then
+if not (distance == nil) and (distance < loc.location.accuracy) then
 	print("Current position is within the accuracy of the determined.")
 	return
 end
