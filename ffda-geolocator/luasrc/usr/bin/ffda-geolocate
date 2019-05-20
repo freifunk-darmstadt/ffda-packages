@@ -93,7 +93,7 @@ else
 	return
 end
 
-if minimum_accuracy and minimum_accuracy < loc.location.accuracy then
+if minimum_accuracy and tonumber(minimum_accuracy) < loc.location.accuracy then
 	print("Determined location is not accurate enough.")
 	return
 end
