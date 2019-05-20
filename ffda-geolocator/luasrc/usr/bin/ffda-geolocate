@@ -5,6 +5,7 @@ local liblocation = require 'ffda-location'
 local unistd = require 'posix.unistd'
 local site = require 'gluon.site'
 local uci = require('simple-uci').cursor()
+local util = require 'gluon.util'
 
 function get_arg(argument)
 	local val = false
@@ -60,11 +61,32 @@ function get_locator_url()
 	return site.geolocator.url()
 end
 
+function get_last_update()
+	local update_flag_path = "/tmp/ffda_location_set"
+
+	if not unistd.access(update_flag_path) then
+		return nil
+	end
+
+	local f = io.open(update_flag_path)
+	if not f then
+		return nil
+	end
+	local last_update = f:read('*a')
+	f:close()
+
+	return tonumber(last_update)
+end
+
 if get_arg("--cron") then
-	if not uci:get_bool("ffda", "locator", "enabled") then
+	if not uci:get_bool("ffda", "geolocator", "enabled") then
 		return
 	end
-	if unistd.access("/tmp/ffda_location_set") then
+
+	local update_interval = uci:get("ffda", "geolocator", "update_interval")
+	local last_update = get_last_update()
+
+	if last_update ~= nil and util.get_uptime() - last_update < (tonumber(update_interval) * 60) then
 		return
 	end
 end
@@ -82,25 +104,30 @@ print("---")
 print("https://www.openstreetmap.org/?mlat=" .. loc.location.lat .. "&mlon=" .. loc.location.lon .. "#map=18/" .. loc.location.lat .. "/" .. loc.location.lon)
 print("https://www.google.com/maps/search/?api=1&query=" .. loc.location.lat .. "," .. loc.location.lon)
 
-local minimum_accuracy = nil
+local max_accuracy = nil
+local min_distance = 0
 
 if get_arg("--set-location") then
-	minimum_accuracy = get_arg("--min-accuracy")
+	max_accuracy = get_arg("--max-accuracy")
 elseif get_arg("--cron") then
-	minimum_accuracy = uci:get("ffda", "locator", "minimum_accuracy")
-	os.execute("touch /tmp/ffda_location_set")
+	max_accuracy = uci:get("ffda", "geolocator", "max_accuracy")
+	min_distance = tonumber(uci:get('ffda', 'geolocator', 'min_distance'))
+	local f = io.open("/tmp/ffda_location_set", 'w')
+	f:write(util.get_uptime())
+	f:close()
 else
 	return
 end
 
-if minimum_accuracy and tonumber(minimum_accuracy) < loc.location.accuracy then
+if max_accuracy and tonumber(max_accuracy) < loc.location.accuracy then
 	print("Determined location is not accurate enough.")
 	return
 end
+
 local distance = distance_from_current(loc.location.lat, loc.location.lon)
 
-if not (distance == nil) and (distance < loc.location.accuracy) then
-	print("Current position is within the accuracy of the determined.")
+if not (distance == nil) and (distance < min_distance) then
+	print("Current position is within the minimum distance.")
 	return
 end
 
