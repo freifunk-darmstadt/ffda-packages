@@ -104,13 +104,13 @@ print("---")
 print("https://www.openstreetmap.org/?mlat=" .. loc.location.lat .. "&mlon=" .. loc.location.lon .. "#map=18/" .. loc.location.lat .. "/" .. loc.location.lon)
 print("https://www.google.com/maps/search/?api=1&query=" .. loc.location.lat .. "," .. loc.location.lon)
 
-local max_accuracy = nil
+local min_accuracy = nil
 local min_distance = 0
 
 if get_arg("--set-location") then
-	max_accuracy = get_arg("--max-accuracy")
+	min_accuracy = get_arg("--min-accuracy")
 elseif get_arg("--cron") then
-	max_accuracy = uci:get("ffda", "geolocator", "max_accuracy")
+	min_accuracy = uci:get("ffda", "geolocator", "min_accuracy")
 	min_distance = tonumber(uci:get('ffda', 'geolocator', 'min_distance'))
 	local f = io.open("/tmp/ffda_location_set", 'w')
 	f:write(util.get_uptime())
@@ -119,7 +119,7 @@ else
 	return
 end
 
-if max_accuracy and tonumber(max_accuracy) < loc.location.accuracy then
+if min_accuracy and tonumber(min_accuracy) < loc.location.accuracy then
 	print("Determined location is not accurate enough.")
 	return
 end

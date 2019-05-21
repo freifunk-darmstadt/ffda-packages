@@ -11,7 +11,7 @@ if uci:get("ffda", "geolocator", "enabled") == nil then
 		enabled = '0',
 		update_interval = '10',
 		min_distance = '250',
-		max_accuracy = '150',
+		min_accuracy = '150',
 	})
 	uci:commit("ffda")
 end
