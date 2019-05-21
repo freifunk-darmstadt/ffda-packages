@@ -126,9 +126,12 @@ end
 
 local distance = distance_from_current(loc.location.lat, loc.location.lon)
 
-if not (distance == nil) and (distance < min_distance) then
-	print("Current position is within the minimum distance.")
-	return
+if not (distance == nil) then
+	print("Determined position is " .. math.floor(distance+0.5) .. " meters from currently set position away.")
+	if (distance < min_distance) then
+		print("Determined position has to be at least " .. min_distance .. " meters away to be saved.")
+		return
+	end
 end
 
 set_location(loc.location.lat, loc.location.lon)
