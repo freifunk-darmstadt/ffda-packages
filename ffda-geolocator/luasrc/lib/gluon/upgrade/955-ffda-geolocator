@@ -22,5 +22,5 @@ end
 
 -- Execute locator every 10 minutes
 local f = io.open("/usr/lib/micron.d/ffda-geolocator", 'w')
-f:write("*/10 * * * *  /usr/bin/ffda-geolocator --cron\n")
+f:write("*/10 * * * *  /usr/bin/ffda-geolocate --cron\n")
 f:close()
