@@ -1,6 +1,7 @@
 #!/usr/bin/lua
 
 local uci = require('simple-uci').cursor()
+local unistd = require 'posix.unistd'
 local ddutil = require 'ffda-domain-director'
 
 -- Executes domain switch
@@ -39,13 +40,9 @@ function switch_domain()
     print("Gateways were unreachable for a long time. Assuming domain switch has already happened. Switching now.")
   end
 
-  print("Setting domain.")
-  uci:set("gluon", "core", "domain", target_domain)
-  uci:commit("gluon")
-  print("Executing reconfigure")
-  os.execute("gluon-reconfigure")
-  print("Rebooting now.")
-  os.execute("reboot")
+  print("Rebooting to switch into new domain")
+  local cmd = {[0] = 'gluon-switch-domain', target_domain}
+  unistd.execp(cmd[0], cmd)
 end
 
 if not ddutil.is_enabled() then
